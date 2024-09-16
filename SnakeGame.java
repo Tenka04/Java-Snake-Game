@@ -1,11 +1,12 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Random;
 import java.util.ArrayList.*;
-import java.util.random.*;
 import javax.swing.*;
 
 
-public class SnakeGame extends JPanel {
+
+public class SnakeGame extends JPanel implements ActionListener {
     private class Tile {
         int x;
         int y;
@@ -21,6 +22,11 @@ public class SnakeGame extends JPanel {
 
     Tile snakeHead;
 
+    Tile food;
+    Random random;
+
+    Timer gameLoop;
+
     SnakeGame(int boardWidth, int boardHeigth){
         this.boardWidth=boardWidth;
         this.boardHeigth=boardHeigth;
@@ -28,6 +34,13 @@ public class SnakeGame extends JPanel {
         setBackground(Color.BLACK);
 
         snakeHead = new Tile(5,5);
+
+        food= new Tile(10, 10);
+        random= new Random();
+        placeFood();
+
+        gameLoop= new Timer(100,this);
+        gameLoop.start();
     }
 
     public void paintComponent(Graphics g){
@@ -36,8 +49,27 @@ public class SnakeGame extends JPanel {
     }
 
     public void draw(Graphics g){
-        g.setColor(Color.green);
-        g.fillRect(snakeHead.x,snakeHead.y,tileSize,tileSize);
+        //for the grid
+    /*  for (int i = 0; i < boardWidth/tileSize; i++) {
+            g.drawLine(i*tileSize, 0, i*tileSize, boardHeigth);
+            g.drawLine(0, i*tileSize, boardWidth, i*tileSize);
+        } */
 
+        g.setColor(Color.RED);
+        g.fillRect(food.x*tileSize, food.y*tileSize, tileSize, tileSize);
+
+        g.setColor(Color.green);
+        g.fillRect(snakeHead.x*tileSize, snakeHead.y*tileSize, tileSize,tileSize);
+
+    }
+
+    public void placeFood(){
+        food.x= random.nextInt(boardWidth/tileSize);
+        food.y= random.nextInt(boardHeigth/tileSize);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        repaint();
     }
 }
